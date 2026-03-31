@@ -1,49 +1,44 @@
 <script>
   import DatabaseHeader from '$lib/components/DatabaseHeader.svelte';
-  import RankingList from '$lib/components/RankingList.svelte';
-  import RankingCard from '$lib/components/RankingCard.svelte';
-  import SearchInput from '$lib/components/SearchInput.svelte';
   import MethodologyBox from '$lib/components/MethodologyBox.svelte';
-  import { base } from '$app/paths';
+  import LocatorMap from '$lib/components/LocatorMap.svelte';
 
   let { data } = $props();
-
-  let top20 = data.violations
-    .sort((a, b) => a.rank - b.rank)
-    .slice(0, 20);
-
-  let search = $state('');
-
-  let filtered = $derived(
-    data.violations
-      .filter(b => b.address.toLowerCase().includes(search.toLowerCase()))
-      .sort((a, b) => a.rank - b.rank)
-      .slice(0, 20)
-  );
+  let building = data.building;
 </script>
 
 <DatabaseHeader
-  headline="Toxic Home Tracker"
-  description="The Bronx buildings with the most lead paint violations"
-  byline="NYCity News Service"
-  date="March 2026"
+  headline={building.address}
+  description={`${building.violationCount} open lead paint violations`}
 >
-  <div class="search-wrapper">
-    <SearchInput bind:value={search} placeholder="Search by address..." />
-  </div>
+  {#snippet graphic()}
+    <LocatorMap
+      longitude={building.lng}
+      latitude={building.lat}
+      zoom={13}
+      dot={true}
+      width={250}
+    />
+  {/snippet}
 </DatabaseHeader>
 
 <div class="container">
-  <RankingList title={search ? `Showing top ${filtered.length} results` : 'Top 20 buildings by open violations'}>
-    {#each filtered as building (building.id)}
-      <RankingCard
-        rank={building.rank}
-        title={building.address}
-        href="{base}/building/{building.id}"
-        value={building.violationCount}
-      />
-    {/each}
-  </RankingList>
+  <table>
+    <thead>
+      <tr>
+        <th>Date issued</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      {#each building.violations as violation (violation.violationId)}
+        <tr>
+          <td>{violation.date}</td>
+          <td>{violation.description}</td>
+        </tr>
+      {/each}
+    </tbody>
+  </table>
 
   <MethodologyBox>
     <p>
@@ -55,17 +50,30 @@
     </p>
     <p>The code that executed the analysis is available as open source on GitHub at <a href="https://github.com/palewire/nyc-hpd-bronx-lead-paint-violations" target="_blank">github.com/palewire/nyc-hpd-bronx-lead-paint-violations</a>.</p>
   </MethodologyBox>
-
 </div>
 
 <style>
   .container {
     max-width: var(--max-width-wide);
     margin: 0 auto;
+    padding: 0 var(--spacing-md);
   }
 
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+  }
 
-  .search-wrapper {
-    max-width: 500px;
+  th, td {
+    text-align: left;
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: top;
+  }
+
+  th {
+    font-weight: bold;
+    background: var(--color-light-gray);
   }
 </style>
