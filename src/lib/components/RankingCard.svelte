@@ -39,7 +39,7 @@ RankingCard.svelte — A horizontal card showing rank, optional image, title, an
 {/snippet}
 
 {#if href}
-  <a {href} class="ranking-card ranking-card-link">
+  <a href={href} class="ranking-card ranking-card-link">
     {@render cardContent()}
   </a>
 {:else}
