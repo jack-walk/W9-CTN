@@ -2,13 +2,14 @@
   import DatabaseHeader from '$lib/components/DatabaseHeader.svelte';
   import MethodologyBox from '$lib/components/MethodologyBox.svelte';
   import LocatorMap from '$lib/components/LocatorMap.svelte';
+  import { base } from '$app/paths';
 
   let { data } = $props();
   let building = data.building;
 </script>
 
 <div class="back-link-container">
-  <a class="back-link" href="/">← Back</a>
+  <a class="back-link" href={ base }>← Back</a>
 </div>
 
 <DatabaseHeader
