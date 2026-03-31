@@ -7,6 +7,10 @@
   let building = data.building;
 </script>
 
+<div class="back-link-container">
+  <a class="back-link" href="/">← Back</a>
+</div>
+
 <DatabaseHeader
   headline={building.address}
   description={`${building.violationCount} open lead paint violations`}
@@ -53,6 +57,23 @@
 </div>
 
 <style>
+  .back-link-container {
+    max-width: var(--max-width-wide);
+    margin: 0 auto;
+    padding: var(--spacing-md);
+  }
+
+  .back-link {
+    display: inline-block;
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .back-link:hover {
+    text-decoration: underline;
+  }
+
   .container {
     max-width: var(--max-width-wide);
     margin: 0 auto;
